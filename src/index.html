@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subtext — make your GitHub profile outstanding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap brand">
+    <h1>Subtext<span class="dot">.</span></h1>
+    <span class="tag">make your profile outstanding</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">GitHub profile generator</div>
+    <h2>Turn your username into a profile that <em>stops the scroll</em>.</h2>
+    <p class="lede">Subtext reads your real repositories, then lets you edit every detail and style every element. Pick a look, tweak the words, copy the markdown. Done.</p>
+    <div class="search">
+      <span class="at">@</span>
+      <input id="handle" type="text" placeholder="your-github-username" autocomplete="off" spellcheck="false" aria-label="GitHub username">
+      <button id="go">Build my profile</button>
+    </div>
+    <div class="samples">
+      <b>Try:</b>
+      <a data-u="torvalds">torvalds</a>·<a data-u="sindresorhus">sindresorhus</a>·<a data-u="anuraghazra">anuraghazra</a>·<a data-u="gaearon">gaearon</a>
+    </div>
+    <div class="status" id="status"><span class="spin"></span><span id="statustext">Reading repositories…</span></div>
+    <div class="err" id="err"></div>
+  </div>
+</section>
+
+<section id="studio">
+  <div class="wrap grid">
+    <aside class="panel">
+      <div class="panel-tabs">
+        <button data-pane="content" class="on">Content</button>
+        <button data-pane="style">Style</button>
+        <button data-pane="sections">Sections</button>
+      </div>
+      <div class="panel-body">
+        <!-- CONTENT PANE (the form) -->
+        <div class="pane on" id="pane-content">
+          <div class="pblock">
+            <h5>Identity</h5>
+            <div class="field"><label>Display name</label><input id="f-name" type="text"></div>
+            <div class="field"><label>Tagline / headline</label><input id="f-tagline" type="text" placeholder="e.g. Backend engineer · distributed systems"></div>
+            <div class="field"><label>About / intro</label><textarea id="f-about"></textarea><div class="field-hint">Pre-written from your repos. Edit freely.</div></div>
+            <div class="field"><div class="row"><div><label>Role</label><input id="f-role" type="text" placeholder="Software Engineer"></div><div><label>Location</label><input id="f-location" type="text" placeholder="City, Country"></div></div></div>
+            <div class="field"><label>Currently working on</label><input id="f-working" type="text" placeholder="a side project, a startup…"></div>
+            <div class="field"><label>Currently learning</label><input id="f-learning" type="text" placeholder="Rust, systems design…"></div>
+            <div class="field"><label>Ask me about</label><input id="f-askme" type="text" placeholder="APIs, open source…"></div>
+          </div>
+          <div class="pblock">
+            <h5>Links</h5>
+            <div class="field"><label>Website <span class="gh" id="gh-blog"></span></label><input id="f-website" type="text" placeholder="https://…"></div>
+            <div class="field"><label>X / Twitter handle <span class="gh" id="gh-tw"></span></label><input id="f-twitter" type="text" placeholder="username (no @)"></div>
+            <div class="field"><label>LinkedIn handle</label><input id="f-linkedin" type="text" placeholder="in/username"></div>
+            <div class="field"><label>Email <span class="gh" id="gh-em"></span></label><input id="f-email" type="text" placeholder="you@example.com"></div>
+            <div class="field"><label>Ko-fi handle</label><input id="f-kofi" type="text" placeholder="for the Support section"></div>
+          </div>
+          <div class="pblock">
+            <h5>Tech stack</h5>
+            <div class="field"><label>Languages & tools (comma-separated)</label><textarea id="f-stack" placeholder="JavaScript, TypeScript, React, Node.js"></textarea><div class="field-hint">Pre-filled from your repos. Add anything: React, Docker, AWS…</div></div>
+          </div>
+          <div class="pblock">
+            <h5>FAQ <span style="margin-left:auto;font-family:var(--mono);color:var(--slate);text-transform:none;letter-spacing:0">enable in Sections tab</span></h5>
+            <div class="faqlist" id="faqlist"></div>
+            <button class="addrow" id="faq-add">+ Add question</button>
+          </div>
+          <div class="pblock">
+            <h5>Tech mindmap <span style="margin-left:auto;font-family:var(--mono);color:var(--slate);text-transform:none;letter-spacing:0">enable in Sections tab</span></h5>
+            <div class="field"><label>Center label</label><input id="f-mindRoot" type="text" placeholder="Your name or focus"></div>
+            <label style="display:block;font-size:12px;color:var(--paper-dim);margin-bottom:5px;font-weight:500">Branches</label>
+            <div class="faqlist" id="mindlist"></div>
+            <button class="addrow" id="mind-add">+ Add branch</button>
+            <div class="field-hint" style="margin-top:8px">Letters, numbers, and . + # / - only — Mermaid breaks on other symbols.</div>
+          </div>
+        </div>
+
+        <!-- STYLE PANE -->
+        <div class="pane" id="pane-style">
+          <div class="pblock"><h5>Theme</h5><div class="themes" id="themes"></div></div>
+          <div class="pblock"><h5>Accent color</h5><div class="accentrow" id="accents"></div></div>
+          <div class="pblock"><h5>Header style</h5><div class="seg-choice" id="opt-header"></div></div>
+          <div class="pblock"><h5>Badge style</h5><div class="seg-choice" id="opt-badge"></div></div>
+          <div class="pblock"><h5>Badge layout</h5><div class="seg-choice" id="opt-badgeLayout"></div></div>
+          <div class="pblock"><h5>Stats card layout</h5><div class="seg-choice" id="opt-statcard"></div></div>
+          <div class="pblock"><h5>Emoji in headings</h5><div class="seg-choice" id="opt-emoji"></div></div>
+        </div>
+
+        <!-- SECTIONS PANE -->
+        <div class="pane" id="pane-sections">
+          <div class="pblock">
+            <h5>Sections — toggle & drag to reorder</h5>
+            <div class="toggles" id="toggles"></div>
+          </div>
+          <div class="pblock">
+            <h5>Showcase repos — pick up to 6</h5>
+            <div class="repopick" id="repopick"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="stage">
+      <div class="stagebar">
+        <div class="seg">
+          <button id="tab-preview" class="on">Preview</button>
+          <button id="tab-code">Markdown</button>
+        </div>
+        <span class="gh-toggle" id="dark-toggle"><span id="dark-state">◐ Light</span></span>
+        <button class="copybtn" id="copy">Copy markdown</button>
+        <button class="dlbtn" id="download">Download .md</button>
+      </div>
+
+      <div class="ghview" id="ghview">
+        <div class="ghtab">
+          <span class="t">
+            <svg height="16" viewBox="0 0 16 16" width="16"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"></path></svg>
+            README.md
+          </span>
+          <span class="rd" id="rd-name"></span>
+        </div>
+        <div class="ghbody" id="ghbody"></div>
+      </div>
+
+      <div class="codeview" id="codeview"><pre id="md"></pre></div>
+
+      <div class="hint" id="hint">
+        <b>Tip:</b> <span>Create a repo named exactly your username, add README.md, paste this in — it shows at the top of your profile. Stat cards & badges render live once on GitHub.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Subtext — open source. Reads public GitHub data; nothing is stored.</span>
+    <span>Best of both: polished and striking.</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

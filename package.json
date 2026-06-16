@@ -1,0 +1,20 @@
+{
+  "name": "subtext",
+  "version": "1.0.0",
+  "description": "Make your GitHub profile outstanding — read your real repos and generate a complete, editable, striking profile README.",
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes serve src -l 5173",
+    "start": "npx --yes serve src -l 5173"
+  },
+  "keywords": [
+    "github",
+    "profile",
+    "readme",
+    "generator",
+    "markdown",
+    "open-source"
+  ],
+  "license": "MIT",
+  "private": false
+}
